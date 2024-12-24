@@ -1,9 +1,5 @@
-/*
-Covid 19 Data Exploration 
 
-Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
-
-*/
+-- Covid 19 Data Analysis
 
 Select *
 From PortfolioProject..CovidDeaths
@@ -11,7 +7,7 @@ Where continent is not null
 order by 3,4
 
 
--- Select Data that we are going to be starting with
+-- Select Data
 
 Select Location, date, total_cases, new_cases, total_deaths, population
 From PortfolioProject..CovidDeaths
@@ -71,7 +67,7 @@ order by TotalDeathCount desc
 
 
 
--- GLOBAL NUMBERS
+-- Global numbers
 
 Select SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int))/SUM(New_Cases)*100 as DeathPercentage
 From PortfolioProject..CovidDeaths
@@ -131,7 +127,7 @@ RollingPeopleVaccinated numeric
 
 Insert into #PercentPopulationVaccinated
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac
@@ -146,7 +142,7 @@ From #PercentPopulationVaccinated
 
 
 
--- Creating View to store data for later visualizations
+-- Creating View to store data for visualization
 
 Create View PercentPopulationVaccinated as
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
